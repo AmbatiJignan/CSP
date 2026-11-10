@@ -25,6 +25,9 @@ class Settings(BaseSettings):
     ORACLE_HOST: str = Field(default="localhost")
     ORACLE_PORT: int = Field(default=1521)
     ORACLE_SERVICE_NAME: str = Field(default="FREEPDB1")
+    # Optional full connect string (for cloud DBs such as Oracle Autonomous, TLS).
+    # When set, it is used instead of host/port/service name.
+    ORACLE_DSN: Optional[str] = Field(default=None)
 
     # Security & JWT
     SECRET_KEY: str = Field(default="greengrow-organic-portal-super-secret-key-2026-production-ready")
@@ -54,6 +57,22 @@ class Settings(BaseSettings):
             port=self.ORACLE_PORT,
             query={"service_name": self.ORACLE_SERVICE_NAME},
         )
+
+    @property
+    def engine_kwargs(self) -> dict:
+        """Extra create_engine() arguments. Uses ORACLE_DSN when provided."""
+        if not self.ORACLE_DSN:
+            return {}
+        import oracledb
+
+        def _connect():
+            return oracledb.connect(
+                user=self.ORACLE_USER,
+                password=self.ORACLE_PASSWORD,
+                dsn=self.ORACLE_DSN,
+            )
+
+        return {"creator": _connect}
 
     model_config = SettingsConfigDict(
         env_file=[

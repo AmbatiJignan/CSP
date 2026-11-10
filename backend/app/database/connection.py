@@ -15,6 +15,7 @@ engine = create_engine(
     pool_recycle=3600,
     pool_pre_ping=True,
     echo=False,
+    **settings.engine_kwargs,
 )
 
 # Session factory

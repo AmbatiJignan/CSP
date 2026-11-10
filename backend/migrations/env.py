@@ -45,6 +45,7 @@ def run_migrations_online() -> None:
     connectable = create_engine(
         settings.sqlalchemy_database_url,
         poolclass=pool.NullPool,
+        **settings.engine_kwargs,
     )
 
     with connectable.connect() as connection:
