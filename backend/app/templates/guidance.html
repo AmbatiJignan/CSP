@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+
+{% block title %}Practical Farmer Guidance – GreenGrow Portal{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="py-5 bg-white border-bottom">
+  <div class="container px-lg-5">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mb-2">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Farmer Guidance</li>
+      </ol>
+    </nav>
+    <span class="section-badge">Actionable Advisory</span>
+    <h1 class="fw-bold mb-2">Practical Farmer Guidance Manual</h1>
+    <p class="text-muted lead mb-0">Practical recommendations for transitioning land, preparing soils, and managing crops organically.</p>
+  </div>
+</div>
+
+<div class="container px-lg-5 py-5">
+  <div class="alert alert-warning border-0 p-4 rounded-4 shadow-sm mb-5">
+    <div class="d-flex gap-3">
+      <i class="bi bi-exclamation-triangle-fill text-warning fs-3"></i>
+      <div>
+        <h5 class="fw-bold mb-1">Local Advisory Notice</h5>
+        <p class="small text-muted mb-0">
+          Agricultural practices are site-specific. The guidance presented below represents general best practices. Farmers are strongly encouraged to adapt schedules, input dosages, and crop varieties to their specific soil texture, irrigation status, and advice from local Krishi Vigyan Kendras (KVK) and Agricultural Extension Officers.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <!-- Step 1: Phased Transition Strategy -->
+    <div class="col-md-6">
+      <div class="card h-100 border rounded-4 p-4 shadow-sm">
+        <div class="d-flex align-items-center gap-3 mb-3">
+          <span class="badge bg-success fs-5 p-2 rounded-circle">1</span>
+          <h5 class="fw-bold mb-0">Phased Transition Strategy (Do Not Switch Overnight)</h5>
+        </div>
+        <p class="text-muted small">
+          Abruptly withdrawing all synthetic fertilisers often causes an alarming yield reduction because chemical-treated soils temporarily lack sufficient active beneficial bacteria.
+        </p>
+        <ul class="text-muted small ps-3 mb-0">
+          <li><strong>Year 1:</strong> Transition 25%–33% of your plot. Reduce synthetic fertiliser by 30% while doubling FYM and applying Azospirillum/PSB.</li>
+          <li><strong>Year 2:</strong> Grow a green manure crop (Sunnhemp/Dhaincha). Reduce synthetic fertiliser by 60%. Observe soil crumb structure.</li>
+          <li><strong>Year 3:</strong> Full organic production with on-farm vermicompost, Jeevamrutham, and bio-control traps.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Step 2: Soil Preparation & Inoculation -->
+    <div class="col-md-6">
+      <div class="card h-100 border rounded-4 p-4 shadow-sm">
+        <div class="d-flex align-items-center gap-3 mb-3">
+          <span class="badge bg-success fs-5 p-2 rounded-circle">2</span>
+          <h5 class="fw-bold mb-0">Soil Preparation & Biological Inoculation</h5>
+        </div>
+        <p class="text-muted small">
+          Proper land tillage prepares the seedbed and activates native microbes:
+        </p>
+        <ul class="text-muted small ps-3 mb-0">
+          <li>Deep summer ploughing exposes resting soil pupae, nematode cysts, and weed roots to solar sterilisation.</li>
+          <li>Incorporate 4 to 5 tonnes of well-rotted FYM per acre 3 to 4 weeks prior to sowing.</li>
+          <li>Apply bio-fertiliser mixtures (Rhizobium for legumes, PSB for phosphorus release) mixed with moist compost directly into planting furrows.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Step 3: Natural Liquid Fermentations (Jeevamrutham) -->
+    <div class="col-md-6">
+      <div class="card h-100 border rounded-4 p-4 shadow-sm">
+        <div class="d-flex align-items-center gap-3 mb-3">
+          <span class="badge bg-success fs-5 p-2 rounded-circle">3</span>
+          <h5 class="fw-bold mb-0">On-Farm Liquid Microbial Inoculants (Jeevamrutham)</h5>
+        </div>
+        <p class="text-muted small">
+          A traditional, low-cost bio-stimulant that introduces trillions of beneficial microorganisms:
+        </p>
+        <ul class="text-muted small ps-3 mb-0">
+          <li><strong>Recipe for 1 Acre:</strong> Mix 10 kg fresh indigenous cow dung, 5–10 litres cow urine, 2 kg jaggery, 2 kg pulse flour (besan), and a handful of virgin forest or field-bund soil into 200 litres water.</li>
+          <li>Stir clockwise twice daily under shade for 48–72 hours.</li>
+          <li>Apply through irrigation channels or spray diluted (10%) onto crop foliage at 21-day intervals.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Step 4: Proactive Pest Management -->
+    <div class="col-md-6">
+      <div class="card h-100 border rounded-4 p-4 shadow-sm">
+        <div class="d-flex align-items-center gap-3 mb-3">
+          <span class="badge bg-success fs-5 p-2 rounded-circle">4</span>
+          <h5 class="fw-bold mb-0">Proactive & Preventive Pest Defense</h5>
+        </div>
+        <p class="text-muted small">
+          In organic agriculture, pest control is preventative rather than retaliatory:
+        </p>
+        <ul class="text-muted small ps-3 mb-0">
+          <li>Install 5 yellow sticky traps and 5 pheromone traps per acre early in the vegetative phase to monitor initial moth flights.</li>
+          <li>Plant African marigold along plot borders to trap fruit borer moths.</li>
+          <li>At first sighting of minor sucking pests, spray 5% Neem Seed Kernel Extract (NSKE) or 10,000 ppm cold-pressed neem oil (3 ml/litre).</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Step 5: Water Conservation & Mulching -->
+    <div class="col-md-6">
+      <div class="card h-100 border rounded-4 p-4 shadow-sm">
+        <div class="d-flex align-items-center gap-3 mb-3">
+          <span class="badge bg-success fs-5 p-2 rounded-circle">5</span>
+          <h5 class="fw-bold mb-0">Moisture Conservation & Mulching</h5>
+        </div>
+        <p class="text-muted small">
+          Retaining moisture protects crops from intense summer heatwaves:
+        </p>
+        <ul class="text-muted small ps-3 mb-0">
+          <li>Maintain continuous organic cover: never leave topsoil naked beneath scorching sun.</li>
+          <li>Mulch row crops with dried straw or sugarcane trash at 2–3 tonnes/acre.</li>
+          <li>Adopt alternate furrow irrigation or broad bed furrow (BBF) systems to conserve 30% of irrigation water.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Step 6: Seed Treatment & Organic Certification -->
+    <div class="col-md-6">
+      <div class="card h-100 border rounded-4 p-4 shadow-sm">
+        <div class="d-flex align-items-center gap-3 mb-3">
+          <span class="badge bg-success fs-5 p-2 rounded-circle">6</span>
+          <h5 class="fw-bold mb-0">Seed Treatment & Organic Certification</h5>
+        </div>
+        <p class="text-muted small">
+          Strengthening seedling vigour from the very start:
+        </p>
+        <ul class="text-muted small ps-3 mb-0">
+          <li>Treat seeds with <em>Trichoderma viride</em> (4g/kg seed) or <em>Pseudomonas fluorescens</em> (10g/kg seed) to prevent damping off and fungal root rot.</li>
+          <li>Maintain transparent farm record diaries (sowing dates, input batches, harvest tallies) required for Participatory Guarantee System (PGS-India) certification.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-5 text-center">
+    <a href="/calculator" class="btn btn-primary-green rounded-pill px-4 me-2">
+      <i class="bi bi-calculator me-1"></i>Calculate Organic Input Needs
+    </a>
+    <a href="/resources" class="btn btn-outline-green rounded-pill px-4">
+      <i class="bi bi-file-earmark-pdf me-1"></i>Download Printable PDF Guides
+    </a>
+  </div>
+</div>
+{% endblock %}

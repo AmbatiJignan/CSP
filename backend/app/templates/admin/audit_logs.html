@@ -1,0 +1,61 @@
+{% extends "admin/base.html" %}
+
+{% block title %}System Audit Logs – GreenGrow Admin{% endblock %}
+{% block page_title %}Security & Administrative Audit Trail{% endblock %}
+
+{% block content %}
+<div class="admin-card">
+  <div class="admin-card-header">
+    <h5><i class="bi bi-shield-check text-success me-2"></i>Recent Administrative Activity</h5>
+    <span class="badge bg-light text-muted">Oracle AUDIT_LOGS Table</span>
+  </div>
+  <div class="table-responsive">
+    <table class="table admin-table mb-0">
+      <thead>
+        <tr>
+          <th>Time</th>
+          <th>Admin</th>
+          <th>Action</th>
+          <th>Entity</th>
+          <th>Target ID</th>
+          <th>Details</th>
+          <th>IP Address</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if logs %}
+          {% for log in logs %}
+          <tr>
+            <td><small class="text-muted">{{ log.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</small></td>
+            <td><strong>{{ log.admin_username }}</strong></td>
+            <td>
+              {% if log.action in ['CREATE', 'UPLOAD'] %}
+                <span class="badge bg-success-subtle text-success">{{ log.action }}</span>
+              {% elif log.action in ['UPDATE'] %}
+                <span class="badge bg-warning-subtle text-warning-emphasis">{{ log.action }}</span>
+              {% elif log.action in ['DELETE'] %}
+                <span class="badge bg-danger-subtle text-danger">{{ log.action }}</span>
+              {% elif log.action.startswith('EXPORT') %}
+                <span class="badge bg-info-subtle text-info">{{ log.action }}</span>
+              {% else %}
+                <span class="badge bg-secondary-subtle text-secondary">{{ log.action }}</span>
+              {% endif %}
+            </td>
+            <td><code>{{ log.target_entity }}</code></td>
+            <td>{{ log.target_id or '-' }}</td>
+            <td><small class="text-muted">{{ log.details or '-' }}</small></td>
+            <td><small class="text-muted">{{ log.ip_address or '-' }}</small></td>
+          </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td colspan="7" class="text-center text-muted py-5">
+              No audit logs recorded yet.
+            </td>
+          </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

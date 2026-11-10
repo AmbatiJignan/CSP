@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+
+{% block title %}Organic Input Estimation Calculator – GreenGrow Portal{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="py-5 bg-white border-bottom">
+  <div class="container px-lg-5">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mb-2">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Input Calculator</li>
+      </ol>
+    </nav>
+    <span class="section-badge">Farm Planning Tool</span>
+    <h1 class="fw-bold mb-2" data-i18n="calc_title">Organic Input Estimation Calculator</h1>
+    <p class="text-muted lead mb-0" data-i18n="calc_subtitle">
+      Calculate estimated organic manure, compost, or biofertiliser quantity needed based on your crop-specific application rate.
+    </p>
+  </div>
+</div>
+
+<div class="container px-lg-5 py-5">
+  <div class="row g-5">
+    <!-- Calculator Form Column -->
+    <div class="col-lg-7">
+      <div class="calculator-card shadow-sm">
+        <div class="d-flex align-items-center gap-2 mb-3 pb-2 border-bottom">
+          <i class="bi bi-sliders text-success fs-4"></i>
+          <h4 class="fw-bold mb-0">Input Parameters</h4>
+        </div>
+
+        <form id="organicCalculatorForm">
+          <!-- Input Type -->
+          <div class="mb-4">
+            <label for="calcInputType" class="form-label fw-bold text-dark" data-i18n="calc_input_type">
+              Organic Input Type
+            </label>
+            <select class="form-select form-select-lg" id="calcInputType" required>
+              <option value="Farmyard Manure (FYM)">Farmyard Manure (FYM)</option>
+              <option value="Vermicompost">Vermicompost</option>
+              <option value="Enriched Compost">Enriched Compost</option>
+              <option value="Neem Cake / Castor Cake">Neem Cake / Castor Cake</option>
+              <option value="Biofertilisers (Rhizobium / PSB)">Biofertilisers (Rhizobium / PSB)</option>
+              <option value="Liquid Bio-Formulation (Jeevamrutham)">Liquid Bio-Formulation (Jeevamrutham)</option>
+              <option value="Green Manure Seed">Green Manure Seed</option>
+            </select>
+          </div>
+
+          <!-- Cultivated Area & Unit -->
+          <div class="row g-3 mb-4">
+            <div class="col-md-7">
+              <label for="calcArea" class="form-label fw-bold text-dark" data-i18n="calc_area_label">
+                Cultivated Area
+              </label>
+              <div class="input-group input-group-lg">
+                <span class="input-group-text bg-light"><i class="bi bi-grid-3x3"></i></span>
+                <input type="number" step="0.01" min="0.01" class="form-control" id="calcArea" placeholder="e.g. 2.5" required value="2.0">
+              </div>
+            </div>
+            <div class="col-md-5">
+              <label for="calcAreaUnit" class="form-label fw-bold text-dark" data-i18n="calc_unit_label">
+                Area Unit
+              </label>
+              <select class="form-select form-select-lg" id="calcAreaUnit" required>
+                <option value="Acres" selected>Acres</option>
+                <option value="Hectares">Hectares</option>
+                <option value="Gunthas / Cents">Gunthas / Cents</option>
+                <option value="Square Meters">Square Meters</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Application Rate & Unit -->
+          <div class="row g-3 mb-4">
+            <div class="col-md-7">
+              <label for="calcRate" class="form-label fw-bold text-dark" data-i18n="calc_rate_label">
+                Recommended Application Rate
+              </label>
+              <div class="input-group input-group-lg">
+                <span class="input-group-text bg-light"><i class="bi bi-speedometer"></i></span>
+                <input type="number" step="0.01" min="0.01" class="form-control" id="calcRate" placeholder="e.g. 4.0" required value="3.5">
+              </div>
+              <small class="text-muted d-block mt-1">
+                Enter recommendation from your soil test card or crop package of practices.
+              </small>
+            </div>
+            <div class="col-md-5">
+              <label for="calcRateUnit" class="form-label fw-bold text-dark" data-i18n="calc_rate_unit_label">
+                Rate Unit
+              </label>
+              <select class="form-select form-select-lg" id="calcRateUnit" required>
+                <option value="tonnes/acre" selected>tonnes / acre</option>
+                <option value="tonnes/hectare">tonnes / hectare</option>
+                <option value="kg/acre">kg / acre</option>
+                <option value="kg/hectare">kg / hectare</option>
+                <option value="quintals/acre">quintals / acre</option>
+                <option value="litres/acre">litres / acre (liquids)</option>
+                <option value="kg/guntha">kg / guntha</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Calculate Action Button -->
+          <button type="submit" class="btn btn-primary-green w-100 py-3 rounded-pill fw-bold fs-5 shadow-sm" data-i18n="calc_btn">
+            <i class="bi bi-calculator me-2"></i>Calculate Estimated Quantity
+          </button>
+        </form>
+
+        <!-- Dynamic Results Container -->
+        <div id="calculatorResultContainer" class="mt-4">
+          <!-- Filled dynamically by calculator.js -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Guidance & Context Info Column -->
+    <div class="col-lg-5">
+      <div class="p-4 bg-white border rounded-4 shadow-sm mb-4">
+        <h5 class="fw-bold text-success mb-3">
+          <i class="bi bi-lightbulb text-warning me-2"></i>How the Calculator Works
+        </h5>
+        <div class="p-3 bg-light rounded-3 font-monospace small mb-3 border">
+          <strong>Estimated Quantity</strong> = Cultivated Area × Application Rate
+        </div>
+        <p class="small text-muted mb-2">
+          This calculator does not prescribe universal fertiliser or manure application rates. Application rates differ substantially based on:
+        </p>
+        <ul class="small text-muted ps-3 mb-3">
+          <li><strong>Crop Nutrient Demand:</strong> Heavy feeders (Paddy, Sugarcane) require substantially higher organic carbon inputs than pulses (Groundnut, Red gram).</li>
+          <li><strong>Baseline Soil Organic Carbon:</strong> Soils testing below 0.5% SOC require supplementary basal compost compared to well-managed fertile tracts.</li>
+          <li><strong>Moisture & Rain Regime:</strong> Irrigated plots can utilize larger quantities of bulky manure efficiently without scorch risks.</li>
+        </ul>
+        <div class="alert alert-warning border-0 p-3 small mb-0">
+          <i class="bi bi-info-circle me-1"></i>
+          <strong>Important Guidance:</strong> Always obtain your recommended dose per acre from your soil test health card or local Krishi Vigyan Kendra (KVK) advisory.
+        </div>
+      </div>
+
+      <div class="p-4 bg-light border rounded-4">
+        <h6 class="fw-bold mb-2">Common Application Rate Units Reference</h6>
+        <div class="table-responsive">
+          <table class="table table-sm table-borderless small mb-0 text-muted">
+            <tbody>
+              <tr><td>1 Hectare</td><td>= 2.471 Acres</td></tr>
+              <tr><td>1 Acre</td><td>= 40 Gunthas = 100 Cents</td></tr>
+              <tr><td>1 Tonne</td><td>= 1,000 Kilograms = 10 Quintals</td></tr>
+              <tr><td>1 Quintal</td><td>= 100 Kilograms</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="/static/js/calculator.js"></script>
+{% endblock %}

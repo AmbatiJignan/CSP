@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block title %}About Organic Farming – GreenGrow Portal{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="py-5 bg-white border-bottom">
+  <div class="container px-lg-5">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mb-2">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">About Organic Farming</li>
+      </ol>
+    </nav>
+    <span class="section-badge">Foundations</span>
+    <h1 class="fw-bold mb-2">Understanding Organic Farming</h1>
+    <p class="text-muted lead mb-0">Principles, objectives, and ecological foundations of sustainable agriculture.</p>
+  </div>
+</div>
+
+<div class="container px-lg-5 py-5">
+  <div class="row g-5">
+    <div class="col-lg-8">
+      <!-- Section 1: Definition -->
+      <section class="mb-5">
+        <h3 class="fw-bold text-success mb-3">What is Organic Farming?</h3>
+        <p>
+          Organic farming is a comprehensive holistic production management system that promotes and enhances agro-ecosystem health, including biodiversity, biological cycles, and soil biological activity. It emphasizes the use of management practices in preference to the use of off-farm inputs, taking into account that regional conditions require locally adapted systems.
+        </p>
+        <p>
+          Unlike production models that rely on synthetically manufactured chemical fertilisers, synthetic chemical pesticides, and genetically modified organisms, organic agriculture prioritises cultural, biological, and mechanical methods to foster nutrient cycling, conserve water, and sustain soil fertility over generations.
+        </p>
+      </section>
+
+      <!-- Section 2: Core Principles -->
+      <section class="mb-5">
+        <h3 class="fw-bold text-success mb-3">The Four Core Principles</h3>
+        <p class="text-muted">Formulated by the International Federation of Organic Agriculture Movements (IFOAM), these four universal principles inspire all organic systems:</p>
+
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div class="p-3 bg-white border rounded-3 h-100 shadow-sm">
+              <h5 class="fw-bold text-dark"><i class="bi bi-heart-pulse text-danger me-2"></i>1. Principle of Health</h5>
+              <p class="small text-muted mb-0">Organic agriculture should sustain and enhance the health of soil, plant, animal, human and planet as one and indivisible. Healthy soils yield healthy crops that nourish humans.</p>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="p-3 bg-white border rounded-3 h-100 shadow-sm">
+              <h5 class="fw-bold text-dark"><i class="bi bi-globe-americas text-primary me-2"></i>2. Principle of Ecology</h5>
+              <p class="small text-muted mb-0">Organic agriculture should be based on living ecological systems and cycles, work with them, emulate them and help sustain them through local ecological adaptation.</p>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="p-3 bg-white border rounded-3 h-100 shadow-sm">
+              <h5 class="fw-bold text-dark"><i class="bi bi-scales text-warning me-2"></i>3. Principle of Fairness</h5>
+              <p class="small text-muted mb-0">Organic agriculture should build on relationships that ensure fairness with regard to the common environment and life opportunities, providing farmers with equitable living conditions.</p>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="p-3 bg-white border rounded-3 h-100 shadow-sm">
+              <h5 class="fw-bold text-dark"><i class="bi bi-shield-check text-success me-2"></i>4. Principle of Care</h5>
+              <p class="small text-muted mb-0">Organic agriculture should be managed in a precautionary and responsible manner to protect the health and well-being of current and future generations and the environment.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 3: Key Objectives -->
+      <section class="mb-5">
+        <h3 class="fw-bold text-success mb-3">Primary Objectives</h3>
+        <ul class="list-group list-group-flush border rounded-3 overflow-hidden shadow-sm">
+          <li class="list-group-item p-3"><i class="bi bi-check2-circle text-success me-2 fs-5"></i><strong>Maintain High Soil Biological Activity:</strong> Stimulating beneficial microbes, mycorrhizal fungi, and earthworms that liberate natural soil nutrients.</li>
+          <li class="list-group-item p-3"><i class="bi bi-check2-circle text-success me-2 fs-5"></i><strong>Close Nutrient Loops on the Farm:</strong> Returning composted crop residues, animal manures, and green manures back to cultivated plots.</li>
+          <li class="list-group-item p-3"><i class="bi bi-check2-circle text-success me-2 fs-5"></i><strong>Conserve Water & Reduce Runoff:</strong> Enhancing organic matter so soils behave like sponges, retaining precious monsoon precipitation.</li>
+          <li class="list-group-item p-3"><i class="bi bi-check2-circle text-success me-2 fs-5"></i><strong>Preserve Biodiversity & Pollinators:</strong> Providing non-toxic habitats for bees, butterflies, predatory beetles, and soil fauna.</li>
+          <li class="list-group-item p-3"><i class="bi bi-check2-circle text-success me-2 fs-5"></i><strong>Reduce Farmer Input Costs:</strong> Eliminating reliance on expensive commercial synthetic pesticides and fertilisers.</li>
+        </ul>
+      </section>
+    </div>
+
+    <!-- Sidebar Info -->
+    <div class="col-lg-4">
+      <div class="p-4 bg-light rounded-4 border mb-4">
+        <h5 class="fw-bold mb-3"><i class="bi bi-geo-alt text-success me-2"></i>The Tholukodu Field Context</h5>
+        <p class="small text-muted mb-3">
+          Our field assessment in Tholukodu village revealed that farmers are keen to adopt organic techniques to arrest falling groundwater levels and rebuild degraded soils, but require practical guidance on input preparation and pest management.
+        </p>
+        <a href="/guidance" class="btn btn-primary-green btn-sm rounded-pill w-100">
+          Explore Farmer Guidance
+        </a>
+      </div>
+
+      <div class="p-4 bg-white rounded-4 border shadow-sm">
+        <h5 class="fw-bold mb-3">Related Topics</h5>
+        <ul class="list-unstyled small d-flex flex-column gap-2 mb-0">
+          <li><a href="/advantages" class="text-success text-decoration-none"><i class="bi bi-arrow-right me-1"></i>Advantages of Organic Farming</a></li>
+          <li><a href="/conventional-risks" class="text-success text-decoration-none"><i class="bi bi-arrow-right me-1"></i>Balanced Analysis of Conventional Risks</a></li>
+          <li><a href="/techniques" class="text-success text-decoration-none"><i class="bi bi-arrow-right me-1"></i>Detailed Farming Techniques</a></li>
+          <li><a href="/comparison" class="text-success text-decoration-none"><i class="bi bi-arrow-right me-1"></i>Organic vs Conventional Comparison</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

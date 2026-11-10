@@ -1,0 +1,315 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Dashboard – GreenGrow Admin{% endblock %}
+{% block page_title %}Dashboard & Analytics{% endblock %}
+
+{% block content %}
+<!-- Quick Action Bar -->
+<div class="d-flex flex-wrap gap-2 justify-content-between align-items-center mb-4">
+  <div class="text-muted small">
+    <i class="bi bi-database-check text-success me-1"></i>Connected to: <strong>Oracle 23ai FREEPDB1</strong>
+  </div>
+  <div class="d-flex flex-wrap gap-2">
+    <a href="/admin/surveys/new" class="btn btn-sm btn-success rounded-pill px-3">
+      <i class="bi bi-plus-circle me-1"></i>Add Survey Record
+    </a>
+    <a href="/admin/articles/new" class="btn btn-sm btn-outline-dark rounded-pill px-3">
+      <i class="bi bi-pencil-square me-1"></i>New Article
+    </a>
+    <a href="/admin/resources" class="btn btn-sm btn-outline-dark rounded-pill px-3">
+      <i class="bi bi-upload me-1"></i>Upload Resource
+    </a>
+    <a href="/api/v1/surveys/export/csv" class="btn btn-sm btn-outline-secondary rounded-pill px-3">
+      <i class="bi bi-filetype-csv me-1"></i>Export CSV
+    </a>
+    <a href="/api/v1/surveys/export/pdf" class="btn btn-sm btn-outline-danger rounded-pill px-3">
+      <i class="bi bi-file-earmark-pdf me-1"></i>PDF Report
+    </a>
+  </div>
+</div>
+
+<!-- 8 Summary Metric Cards -->
+<div class="row g-3 mb-4">
+  <div class="col-sm-6 col-lg-3">
+    <div class="stat-card">
+      <div class="stat-icon green"><i class="bi bi-people-fill"></i></div>
+      <div>
+        <div class="stat-val">{{ overview.total_responses }}</div>
+        <div class="stat-label">Farmer Survey Records</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6 col-lg-3">
+    <div class="stat-card">
+      <div class="stat-icon blue"><i class="bi bi-journal-text"></i></div>
+      <div>
+        <div class="stat-val">{{ overview.total_articles }}</div>
+        <div class="stat-label">Published Articles</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6 col-lg-3">
+    <div class="stat-card">
+      <div class="stat-icon amber"><i class="bi bi-folder-fill"></i></div>
+      <div>
+        <div class="stat-val">{{ overview.total_resources }}</div>
+        <div class="stat-label">Downloadable Resources</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6 col-lg-3">
+    <div class="stat-card">
+      <div class="stat-icon purple"><i class="bi bi-question-circle-fill"></i></div>
+      <div>
+        <div class="stat-val">{{ overview.total_faqs }}</div>
+        <div class="stat-label">Database FAQs</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feedback Breakdown Cards -->
+  <div class="col-sm-6 col-lg-3">
+    <div class="stat-card">
+      <div class="stat-icon blue"><i class="bi bi-chat-left-dots-fill"></i></div>
+      <div>
+        <div class="stat-val">{{ overview.total_feedback }}</div>
+        <div class="stat-label">Total Feedback Received</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6 col-lg-3">
+    <div class="stat-card">
+      <div class="stat-icon amber"><i class="bi bi-envelope-exclamation-fill"></i></div>
+      <div>
+        <div class="stat-val text-danger">{{ overview.feedback_new }}</div>
+        <div class="stat-label">New / Pending Feedback</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6 col-lg-3">
+    <div class="stat-card">
+      <div class="stat-icon blue"><i class="bi bi-eye-fill"></i></div>
+      <div>
+        <div class="stat-val text-warning">{{ overview.feedback_reviewed }}</div>
+        <div class="stat-label">Reviewed Messages</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6 col-lg-3">
+    <div class="stat-card">
+      <div class="stat-icon green"><i class="bi bi-check-circle-fill"></i></div>
+      <div>
+        <div class="stat-val text-success">{{ overview.feedback_resolved }}</div>
+        <div class="stat-label">Resolved Messages</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Alert when no survey data has been entered yet -->
+<div id="noSurveyDataAlert" class="alert alert-warning border-0 p-4 rounded-4 shadow-sm mb-4" style="{% if overview.has_real_survey_data %}display: none;{% endif %}">
+  <div class="d-flex align-items-center gap-3">
+    <i class="bi bi-exclamation-circle-fill fs-2 text-warning"></i>
+    <div>
+      <h5 class="fw-bold mb-1">No Farmer Survey Data Recorded Yet</h5>
+      <p class="small text-muted mb-0">
+        GreenGrow adheres to strict data integrity standards: <strong>we do not fabricate or pre-populate fake survey responses</strong>. Once you record the 15 genuine farmer questionnaires from Tholukodu village using the button below, all Chart.js analytical charts will dynamically populate.
+      </p>
+    </div>
+    <a href="/admin/surveys/new" class="btn btn-warning fw-bold text-dark rounded-pill px-4 ms-auto text-nowrap">
+      <i class="bi bi-plus-lg me-1"></i>Enter First Survey
+    </a>
+  </div>
+</div>
+
+<!-- Chart.js Analytical Visualisations (Actual Data Only) -->
+<div class="row g-4 mb-4" data-analytics-chart>
+  <!-- Chart 1: Farming Method Distribution -->
+  <div class="col-lg-6">
+    <div class="admin-card h-100">
+      <div class="admin-card-header">
+        <h5><i class="bi bi-pie-chart text-success me-2"></i>Farming Method Distribution</h5>
+        <span class="badge bg-light text-muted">Actual Responses</span>
+      </div>
+      <div class="admin-card-body" style="height: 320px; position: relative;">
+        <canvas id="chartFarmingMethods"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chart 2: Organic Input Usage -->
+  <div class="col-lg-6">
+    <div class="admin-card h-100">
+      <div class="admin-card-header">
+        <h5><i class="bi bi-bar-chart-fill text-primary me-2"></i>Organic Input Usage</h5>
+        <span class="badge bg-light text-muted">Field Applications</span>
+      </div>
+      <div class="admin-card-body" style="height: 320px; position: relative;">
+        <canvas id="chartOrganicInputs"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chart 3: Organic Awareness Levels -->
+  <div class="col-lg-6">
+    <div class="admin-card h-100">
+      <div class="admin-card-header">
+        <h5><i class="bi bi-pie-chart-fill text-success me-2"></i>Organic Farming Awareness</h5>
+        <span class="badge bg-light text-muted">Farmer Perception</span>
+      </div>
+      <div class="admin-card-body" style="height: 320px; position: relative;">
+        <canvas id="chartAwareness"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chart 4: Farmer Constraints & Challenges -->
+  <div class="col-lg-6">
+    <div class="admin-card h-100">
+      <div class="admin-card-header">
+        <h5><i class="bi bi-graph-up text-danger me-2"></i>Reported Transition Challenges</h5>
+        <span class="badge bg-light text-muted">Constraints</span>
+      </div>
+      <div class="admin-card-body" style="height: 320px; position: relative;">
+        <canvas id="chartChallenges"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chart 5: Willingness to Adopt Organic Practices -->
+  <div class="col-lg-6">
+    <div class="admin-card h-100">
+      <div class="admin-card-header">
+        <h5><i class="bi bi-bar-chart text-success me-2"></i>Willingness to Adopt Organic</h5>
+        <span class="badge bg-light text-muted">Transition Intent</span>
+      </div>
+      <div class="admin-card-body" style="height: 320px; position: relative;">
+        <canvas id="chartWillingness"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chart 6: Primary Crops Cultivated -->
+  <div class="col-lg-6">
+    <div class="admin-card h-100">
+      <div class="admin-card-header">
+        <h5><i class="bi bi-flower2 text-warning me-2"></i>Primary Crops Cultivated</h5>
+        <span class="badge bg-light text-muted">Tholukodu Tract</span>
+      </div>
+      <div class="admin-card-body" style="height: 320px; position: relative;">
+        <canvas id="chartCrops"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chart 7: Survey Responses Over Time -->
+  <div class="col-12">
+    <div class="admin-card">
+      <div class="admin-card-header">
+        <h5><i class="bi bi-calendar-event text-info me-2"></i>Survey Submissions Timeline</h5>
+        <span class="badge bg-light text-muted">Data Capture Progression</span>
+      </div>
+      <div class="admin-card-body" style="height: 280px; position: relative;">
+        <canvas id="chartTimeline"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Recent Records Tables -->
+<div class="row g-4">
+  <!-- Recent Survey Records -->
+  <div class="col-lg-7">
+    <div class="admin-card h-100">
+      <div class="admin-card-header">
+        <h5><i class="bi bi-clipboard2-check text-success me-2"></i>Recent Survey Entries</h5>
+        <a href="/admin/surveys" class="btn btn-sm btn-outline-secondary rounded-pill">View All</a>
+      </div>
+      <div class="table-responsive">
+        <table class="table admin-table mb-0">
+          <thead>
+            <tr>
+              <th>Code</th>
+              <th>Village</th>
+              <th>Method</th>
+              <th>Awareness</th>
+              <th>Willingness</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if recent_surveys %}
+              {% for s in recent_surveys %}
+              <tr>
+                <td class="fw-bold">{{ s.respondent_code }}</td>
+                <td>{{ s.village }}</td>
+                <td><span class="badge bg-light text-dark border">{{ s.farming_method }}</span></td>
+                <td>{{ s.awareness_level }}</td>
+                <td><span class="badge bg-success-subtle text-success">{{ s.willingness_to_adopt }}</span></td>
+                <td>
+                  <a href="/admin/surveys/{{ s.id }}" class="btn btn-sm btn-outline-primary py-0 px-2 rounded-pill">
+                    View
+                  </a>
+                </td>
+              </tr>
+              {% endfor %}
+            {% else %}
+              <tr>
+                <td colspan="6" class="text-center text-muted py-4">
+                  No survey records present in database yet.
+                </td>
+              </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Feedback Messages -->
+  <div class="col-lg-5">
+    <div class="admin-card h-100">
+      <div class="admin-card-header">
+        <h5><i class="bi bi-chat-left-dots text-primary me-2"></i>Recent Feedback</h5>
+        <a href="/admin/feedback" class="btn btn-sm btn-outline-secondary rounded-pill">View All</a>
+      </div>
+      <div class="table-responsive">
+        <table class="table admin-table mb-0">
+          <thead>
+            <tr>
+              <th>From</th>
+              <th>Subject</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if recent_feedback %}
+              {% for fb in recent_feedback %}
+              <tr>
+                <td><strong>{{ fb.name or 'Anonymous' }}</strong></td>
+                <td>{{ fb.subject[:25] }}...</td>
+                <td>
+                  <span class="badge-status badge-{{ fb.status.lower() }}">{{ fb.status }}</span>
+                </td>
+              </tr>
+              {% endfor %}
+            {% else %}
+              <tr>
+                <td colspan="3" class="text-center text-muted py-4">
+                  No user feedback messages recorded yet.
+                </td>
+              </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

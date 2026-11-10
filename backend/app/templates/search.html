@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+
+{% block title %}Search Results – GreenGrow Portal{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="py-5 bg-white border-bottom">
+  <div class="container px-lg-5">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mb-2">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Search</li>
+      </ol>
+    </nav>
+    <span class="section-badge">Portal Search</span>
+    <h1 class="fw-bold mb-2">Search Results</h1>
+    <p class="text-muted lead mb-0">
+      {% if query %}
+        Showing results for: <strong>"{{ query }}"</strong> ({{ total_matches }} matches found)
+      {% else %}
+        Enter a keyword above to search across articles, FAQs, resources, and videos.
+      {% endif %}
+    </p>
+  </div>
+</div>
+
+<div class="container px-lg-5 py-5">
+  <div class="row g-4">
+    <div class="col-lg-8">
+      <!-- Search Input Box -->
+      <form action="/search" method="GET" class="mb-5">
+        <div class="input-group input-group-lg shadow-sm rounded-pill overflow-hidden border">
+          <input type="text" name="q" class="form-control border-0 ps-4" placeholder="Search articles, techniques, faqs..." value="{{ query }}">
+          <button class="btn btn-success px-4" type="submit">
+            <i class="bi bi-search me-1"></i>Search
+          </button>
+        </div>
+      </form>
+
+      {% if query %}
+        <!-- Articles Results -->
+        {% if results.articles %}
+          <div class="mb-5">
+            <h4 class="fw-bold text-success mb-3"><i class="bi bi-file-text me-2"></i>Articles ({{ results.articles|length }})</h4>
+            <div class="list-group shadow-sm rounded-4 overflow-hidden border">
+              {% for art in results.articles %}
+                <a href="/articles/{{ art.slug }}" class="list-group-item list-group-item-action p-3">
+                  <div class="d-flex justify-content-between align-items-center mb-1">
+                    <h6 class="fw-bold mb-0 text-dark">{{ art.title }}</h6>
+                    <span class="badge bg-success-subtle text-success">{{ art.category.name if art.category else 'General' }}</span>
+                  </div>
+                  <p class="text-muted small mb-0">{{ art.summary or (art.content[:140] ~ '...') }}</p>
+                </a>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+
+        <!-- FAQs Results -->
+        {% if results.faqs %}
+          <div class="mb-5">
+            <h4 class="fw-bold text-primary mb-3"><i class="bi bi-question-circle me-2"></i>Frequently Asked Questions ({{ results.faqs|length }})</h4>
+            <div class="list-group shadow-sm rounded-4 overflow-hidden border">
+              {% for f in results.faqs %}
+                <div class="list-group-item p-3">
+                  <span class="badge bg-primary-subtle text-primary mb-1">{{ f.category }}</span>
+                  <h6 class="fw-bold mb-1 text-dark">{{ f.question }}</h6>
+                  <p class="text-muted small mb-0">{{ f.answer }}</p>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+
+        <!-- Resources Results -->
+        {% if results.resources %}
+          <div class="mb-5">
+            <h4 class="fw-bold text-warning-emphasis mb-3"><i class="bi bi-folder2 me-2"></i>Resources & PDF Downloads ({{ results.resources|length }})</h4>
+            <div class="list-group shadow-sm rounded-4 overflow-hidden border">
+              {% for r in results.resources %}
+                <div class="list-group-item p-3 d-flex justify-content-between align-items-center">
+                  <div>
+                    <h6 class="fw-bold mb-1 text-dark">{{ r.title }}</h6>
+                    <small class="text-muted">{{ r.category }} • {{ r.file_type | upper }}</small>
+                  </div>
+                  <a href="/api/v1/resources/{{ r.id }}/download" class="btn btn-sm btn-outline-success rounded-pill px-3">
+                    <i class="bi bi-download me-1"></i>Download
+                  </a>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+
+        <!-- Videos Results -->
+        {% if results.videos %}
+          <div class="mb-5">
+            <h4 class="fw-bold text-danger mb-3"><i class="bi bi-camera-video me-2"></i>Videos ({{ results.videos|length }})</h4>
+            <div class="list-group shadow-sm rounded-4 overflow-hidden border">
+              {% for v in results.videos %}
+                <div class="list-group-item p-3 d-flex justify-content-between align-items-center">
+                  <div>
+                    <h6 class="fw-bold mb-1 text-dark">{{ v.title }}</h6>
+                    <small class="text-muted">{{ v.category }} • {{ v.duration_minutes }} mins</small>
+                  </div>
+                  <a href="{{ v.video_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                    <i class="bi bi-play-circle me-1"></i>Watch
+                  </a>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+
+        {% if total_matches == 0 %}
+          <div class="p-5 text-center bg-white rounded-4 border shadow-sm">
+            <i class="bi bi-search display-3 text-muted mb-3 d-block"></i>
+            <h4 class="fw-bold">No Matches Found</h4>
+            <p class="text-muted small mx-auto" style="max-width: 450px;">
+              Try searching with broader terms such as "compost", "water", "soil", "pests", or "manure".
+            </p>
+          </div>
+        {% endif %}
+
+      {% else %}
+        <div class="p-4 bg-light rounded-4 border">
+          <h5 class="fw-bold mb-2">Search Suggestions</h5>
+          <div class="d-flex flex-wrap gap-2">
+            <a href="/search?q=compost" class="btn btn-sm btn-white border rounded-pill">Compost</a>
+            <a href="/search?q=vermicompost" class="btn btn-sm btn-white border rounded-pill">Vermicompost</a>
+            <a href="/search?q=soil" class="btn btn-sm btn-white border rounded-pill">Soil Health</a>
+            <a href="/search?q=pest" class="btn btn-sm btn-white border rounded-pill">Pest Management</a>
+            <a href="/search?q=water" class="btn btn-sm btn-white border rounded-pill">Water Conservation</a>
+            <a href="/search?q=neem" class="btn btn-sm btn-white border rounded-pill">Neem Extract</a>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="col-lg-4">
+      <div class="p-4 bg-white rounded-4 border shadow-sm">
+        <h5 class="fw-bold mb-3">Quick Navigation</h5>
+        <ul class="list-unstyled small d-flex flex-column gap-2 mb-0">
+          <li><a href="/techniques" class="text-success text-decoration-none"><i class="bi bi-arrow-right me-1"></i>Explore All 9 Techniques</a></li>
+          <li><a href="/calculator" class="text-success text-decoration-none"><i class="bi bi-arrow-right me-1"></i>Input Estimation Calculator</a></li>
+          <li><a href="/comparison" class="text-success text-decoration-none"><i class="bi bi-arrow-right me-1"></i>Organic vs Conventional Table</a></li>
+          <li><a href="/resources" class="text-success text-decoration-none"><i class="bi bi-arrow-right me-1"></i>Downloadable PDF Guides</a></li>
+          <li><a href="/faqs" class="text-success text-decoration-none"><i class="bi bi-arrow-right me-1"></i>Browse FAQs</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

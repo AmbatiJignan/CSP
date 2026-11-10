@@ -1,0 +1,156 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Manage Resources – GreenGrow Admin{% endblock %}
+{% block page_title %}Downloadable Resources & PDFs{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+  <!-- Upload Resource Form -->
+  <div class="col-lg-4">
+    <div class="admin-card">
+      <div class="admin-card-header">
+        <h5><i class="bi bi-cloud-arrow-up text-success me-2"></i>Upload Resource</h5>
+      </div>
+      <div class="admin-card-body">
+        <div id="uploadNotice"></div>
+        <form id="uploadResourceForm">
+          <div class="mb-3">
+            <label class="form-label small fw-bold">Resource Title <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="resTitle" required placeholder="e.g. Organic Manure Guide">
+          </div>
+          <div class="mb-3">
+            <label class="form-label small fw-bold">Category</label>
+            <input type="text" class="form-control" id="resCategory" list="catList" placeholder="Guides" value="Guides">
+            <datalist id="catList">
+              <option value="Guides">
+              <option value="Government Schemes">
+              <option value="Research Papers">
+              <option value="Handbooks">
+            </datalist>
+          </div>
+          <div class="mb-3">
+            <label class="form-label small fw-bold">Description</label>
+            <textarea class="form-control" id="resDesc" rows="3" placeholder="Brief description of the document..."></textarea>
+          </div>
+          <div class="mb-4">
+            <label class="form-label small fw-bold">Select File (PDF, DOCX, XLSX) <span class="text-danger">*</span></label>
+            <input type="file" class="form-control" id="resFile" required accept=".pdf,.doc,.docx,.xlsx,.txt">
+            <small class="text-muted">Maximum file size: 15MB</small>
+          </div>
+          <button type="submit" class="btn btn-primary-green w-100 rounded-pill fw-bold" id="uploadBtn">
+            <i class="bi bi-upload me-1"></i>Upload Resource
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Resources Table -->
+  <div class="col-lg-8">
+    <div class="admin-card">
+      <div class="admin-card-header">
+        <h5><i class="bi bi-folder2 text-primary me-2"></i>Existing Files ({{ resources|length }})</h5>
+      </div>
+      <div class="table-responsive">
+        <table class="table admin-table mb-0">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Category</th>
+              <th>Size</th>
+              <th>Downloads</th>
+              <th>Date</th>
+              <th class="text-end">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if resources %}
+              {% for r in resources %}
+              <tr>
+                <td>
+                  <strong>{{ r.title }}</strong><br>
+                  <small class="text-muted">{{ r.file_name }}</small>
+                </td>
+                <td><span class="badge bg-light text-dark border">{{ r.category }}</span></td>
+                <td><small>{{ (r.file_size_bytes / 1024) | round(1) }} KB</small></td>
+                <td><span class="badge bg-secondary-subtle text-secondary">{{ r.download_count }}</span></td>
+                <td><small class="text-muted">{{ r.created_at.strftime('%Y-%m-%d') }}</small></td>
+                <td class="text-end">
+                  <a href="/api/v1/resources/{{ r.id }}/download" class="btn btn-sm btn-outline-success py-0 px-2 rounded-pill me-1" title="Download">
+                    <i class="bi bi-download"></i>
+                  </a>
+                  <button class="btn btn-sm btn-outline-danger py-0 px-2 rounded-pill" onclick="deleteResource({{ r.id }}, '{{ r.title }}')" title="Delete">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </td>
+              </tr>
+              {% endfor %}
+            {% else %}
+              <tr>
+                <td colspan="6" class="text-center text-muted py-5">
+                  No resources uploaded yet. Use the form to upload a PDF guide.
+                </td>
+              </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  document.getElementById("uploadResourceForm")?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById("uploadBtn");
+    const notice = document.getElementById("uploadNotice");
+    btn.disabled = true;
+    btn.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span>Uploading...`;
+
+    const formData = new FormData();
+    formData.append("title", document.getElementById("resTitle").value.trim());
+    formData.append("category", document.getElementById("resCategory").value.trim() || "Guides");
+    formData.append("description", document.getElementById("resDesc").value.trim());
+    formData.append("is_published", "true");
+    formData.append("file", document.getElementById("resFile").files[0]);
+
+    try {
+      const resp = await fetch("/api/v1/resources/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!resp.ok) {
+        const err = await resp.json().catch(() => ({}));
+        throw new Error(err.detail || "Upload failed");
+      }
+
+      window.location.reload();
+    } catch (err) {
+      notice.innerHTML = `
+        <div class="alert alert-danger py-2 small" role="alert">
+          <i class="bi bi-exclamation-triangle-fill me-1"></i>${err.message}
+        </div>
+      `;
+      btn.disabled = false;
+      btn.innerHTML = `<i class="bi bi-upload me-1"></i>Upload Resource`;
+    }
+  });
+
+  async function deleteResource(id, title) {
+    if (!confirm(`Are you sure you want to delete '${title}'?`)) return;
+    try {
+      const resp = await fetch(`/api/v1/resources/${id}`, { method: 'DELETE' });
+      if (resp.ok || resp.status === 204) {
+        window.location.reload();
+      } else {
+        alert("Failed to delete resource.");
+      }
+    } catch (e) {
+      alert("Error deleting resource.");
+    }
+  }
+</script>
+{% endblock %}
