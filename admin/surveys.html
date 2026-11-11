@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Farmer Surveys – GreenGrow Admin</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <!-- Admin CSS -->
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body class="admin-body">
+
+  <!-- Sidebar -->
+  <aside class="admin-sidebar">
+    <a href="dashboard.html" class="admin-sidebar-brand">
+      <i class="bi bi-flower2 text-success fs-4"></i>
+      <span>GreenGrow</span>
+      <span class="badge-tag">Admin</span>
+    </a>
+
+    <div class="admin-nav-section-title">Core Management</div>
+    <a href="dashboard.html" class="admin-nav-link">
+      <i class="bi bi-speedometer2"></i>
+      <span>Dashboard</span>
+    </a>
+    <a href="surveys.html" class="admin-nav-link active">
+      <i class="bi bi-clipboard2-data"></i>
+      <span>Farmer Surveys</span>
+    </a>
+    <a href="articles.html" class="admin-nav-link">
+      <i class="bi bi-journal-richtext"></i>
+      <span>Articles</span>
+    </a>
+    <a href="resources.html" class="admin-nav-link">
+      <i class="bi bi-file-earmark-pdf"></i>
+      <span>Resources & PDFs</span>
+    </a>
+    <a href="videos.html" class="admin-nav-link">
+      <i class="bi bi-camera-video"></i>
+      <span>Videos</span>
+    </a>
+    <a href="faqs.html" class="admin-nav-link">
+      <i class="bi bi-question-circle"></i>
+      <span>FAQs</span>
+    </a>
+    <a href="feedback.html" class="admin-nav-link">
+      <i class="bi bi-chat-left-text"></i>
+      <span>Feedback Inbox</span>
+    </a>
+
+    <div class="admin-nav-section-title">System & Security</div>
+    <a href="users.html" class="admin-nav-link">
+      <i class="bi bi-people"></i>
+      <span>Admin Accounts</span>
+    </a>
+    <a href="audit_logs.html" class="admin-nav-link">
+      <i class="bi bi-shield-check"></i>
+      <span>Audit Trail</span>
+    </a>
+
+    <div class="mt-auto p-3 border-top border-secondary border-opacity-25">
+      <a href="../index.html" class="admin-nav-link text-white-50">
+        <i class="bi bi-box-arrow-up-right"></i>
+        <span>View Public Site</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main Wrapper -->
+  <div class="admin-main-wrapper">
+    <!-- Topbar -->
+    <header class="admin-topbar">
+      <div class="d-flex align-items-center gap-3">
+        <h4 class="admin-page-title">Farmer Field Survey Records</h4>
+      </div>
+
+      <div class="d-flex align-items-center gap-3">
+        <div class="admin-user-pill">
+          <i class="bi bi-person-circle text-success"></i>
+          <span class="admin-user-name">GreenGrow Project Administrator</span>
+          <span class="badge bg-secondary text-uppercase admin-user-role" style="font-size: 0.65rem;">superadmin</span>
+        </div>
+        <button class="btn btn-sm btn-outline-danger rounded-pill px-3 admin-logout-btn">
+          <i class="bi bi-box-arrow-right me-1"></i>Logout
+        </button>
+      </div>
+    </header>
+
+    <!-- Admin Page Content -->
+    <main class="admin-content">
+      <div class="d-flex flex-wrap gap-2 justify-content-between align-items-center mb-4">
+        <div class="text-muted small">
+          Total Recorded Responses: <strong id="surveyCountLabel">0</strong> (Tholukodu Village Community Survey)
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+          <a href="survey_form.html" class="btn btn-success rounded-pill px-3">
+            <i class="bi bi-plus-circle me-1"></i>Enter New Survey Record
+          </a>
+          <button class="btn btn-outline-secondary rounded-pill px-3" onclick="exportSurveysToCSV()">
+            <i class="bi bi-filetype-csv me-1"></i>Export CSV
+          </button>
+          <button class="btn btn-outline-danger rounded-pill px-3" onclick="window.print()">
+            <i class="bi bi-file-earmark-pdf me-1"></i>Print / Save PDF
+          </button>
+        </div>
+      </div>
+
+      <!-- Filters Card -->
+      <div class="admin-card mb-4">
+        <div class="admin-card-body p-3">
+          <div class="row g-2 align-items-center">
+            <div class="col-md-4">
+              <select id="filterVillage" class="form-select form-select-sm" onchange="renderSurveysTable()">
+                <option value="">-- All Villages --</option>
+                <option value="Tholukodu">Tholukodu</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <select id="filterMethod" class="form-select form-select-sm" onchange="renderSurveysTable()">
+                <option value="">-- All Farming Methods --</option>
+                <option value="Conventional">Conventional</option>
+                <option value="Partially Organic">Partially Organic</option>
+                <option value="Fully Organic">Fully Organic</option>
+                <option value="Natural Farming">Natural Farming</option>
+              </select>
+            </div>
+            <div class="col-md-4 d-flex gap-2">
+              <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill w-100" onclick="resetFilters()">Reset</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Survey Table -->
+      <div class="admin-card">
+        <div class="table-responsive">
+          <table class="table admin-table mb-0">
+            <thead>
+              <tr>
+                <th>Code</th>
+                <th>Village</th>
+                <th>Experience</th>
+                <th>Holding (Acres)</th>
+                <th>Method</th>
+                <th>Awareness</th>
+                <th>Willingness</th>
+                <th>Date</th>
+                <th class="text-end">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="surveyTableBody">
+              <!-- Rendered dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Bootstrap 5 Bundle JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Data Store JS -->
+  <script src="../js/data.js"></script>
+  <!-- Admin Custom JS -->
+  <script src="../js/admin.js"></script>
+  <script>
+    function renderSurveysTable() {
+      const surveys = DataStore.getSurveys();
+      const village = document.getElementById("filterVillage").value;
+      const method = document.getElementById("filterMethod").value;
+
+      let filtered = surveys;
+      if (village) filtered = filtered.filter(s => s.village === village);
+      if (method) filtered = filtered.filter(s => s.farming_method === method);
+
+      document.getElementById("surveyCountLabel").textContent = filtered.length;
+      const tbody = document.getElementById("surveyTableBody");
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="9" class="text-center text-muted py-5">
+              <i class="bi bi-inbox display-4 text-muted d-block mb-2"></i>
+              No survey records found matching the criteria.<br>
+              <a href="survey_form.html" class="btn btn-sm btn-success rounded-pill mt-3">
+                <i class="bi bi-plus-circle me-1"></i>Add First Survey Record
+              </a>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(s => `
+        <tr>
+          <td class="fw-bold">${s.respondent_code}</td>
+          <td>${s.village}</td>
+          <td>${s.farming_experience_years ? s.farming_experience_years + ' yrs' : '-'}</td>
+          <td>${s.land_holding_acres ? s.land_holding_acres + ' ac' : '-'}</td>
+          <td><span class="badge bg-light text-dark border">${s.farming_method}</span></td>
+          <td>${s.awareness_level}</td>
+          <td><span class="badge bg-success-subtle text-success">${s.willingness_to_adopt}</span></td>
+          <td><small class="text-muted">${s.survey_date || '-'}</small></td>
+          <td class="text-end text-nowrap">
+            <a href="survey_detail.html?id=${s.id}" class="btn btn-sm btn-outline-primary py-0 px-2 rounded-pill me-1" title="View Details">
+              <i class="bi bi-eye"></i>
+            </a>
+            <a href="survey_form.html?id=${s.id}" class="btn btn-sm btn-outline-dark py-0 px-2 rounded-pill me-1" title="Edit Record">
+              <i class="bi bi-pencil"></i>
+            </a>
+            <button class="btn btn-sm btn-outline-danger py-0 px-2 rounded-pill" onclick="deleteSurvey(${s.id}, '${s.respondent_code}')" title="Delete Record">
+              <i class="bi bi-trash"></i>
+            </button>
+          </td>
+        </tr>
+      `).join("");
+    }
+
+    function resetFilters() {
+      document.getElementById("filterVillage").value = "";
+      document.getElementById("filterMethod").value = "";
+      renderSurveysTable();
+    }
+
+    function deleteSurvey(id, code) {
+      if (!confirm(`Are you sure you want to delete survey record '${code}'? This cannot be undone.`)) return;
+      const surveys = DataStore.getSurveys().filter(s => s.id !== id);
+      DataStore.saveSurveys(surveys);
+      DataStore.logAudit("DELETE", "SURVEY", code, `Deleted survey record ${code}`);
+      renderSurveysTable();
+    }
+
+    document.addEventListener("DOMContentLoaded", renderSurveysTable);
+  </script>
+</body>
+</html>

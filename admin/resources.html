@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Resources – GreenGrow Admin</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <!-- Admin CSS -->
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body class="admin-body">
+
+  <!-- Sidebar -->
+  <aside class="admin-sidebar">
+    <a href="dashboard.html" class="admin-sidebar-brand">
+      <i class="bi bi-flower2 text-success fs-4"></i>
+      <span>GreenGrow</span>
+      <span class="badge-tag">Admin</span>
+    </a>
+
+    <div class="admin-nav-section-title">Core Management</div>
+    <a href="dashboard.html" class="admin-nav-link">
+      <i class="bi bi-speedometer2"></i>
+      <span>Dashboard</span>
+    </a>
+    <a href="surveys.html" class="admin-nav-link">
+      <i class="bi bi-clipboard2-data"></i>
+      <span>Farmer Surveys</span>
+    </a>
+    <a href="articles.html" class="admin-nav-link">
+      <i class="bi bi-journal-richtext"></i>
+      <span>Articles</span>
+    </a>
+    <a href="resources.html" class="admin-nav-link active">
+      <i class="bi bi-file-earmark-pdf"></i>
+      <span>Resources & PDFs</span>
+    </a>
+    <a href="videos.html" class="admin-nav-link">
+      <i class="bi bi-camera-video"></i>
+      <span>Videos</span>
+    </a>
+    <a href="faqs.html" class="admin-nav-link">
+      <i class="bi bi-question-circle"></i>
+      <span>FAQs</span>
+    </a>
+    <a href="feedback.html" class="admin-nav-link">
+      <i class="bi bi-chat-left-text"></i>
+      <span>Feedback Inbox</span>
+    </a>
+
+    <div class="admin-nav-section-title">System & Security</div>
+    <a href="users.html" class="admin-nav-link">
+      <i class="bi bi-people"></i>
+      <span>Admin Accounts</span>
+    </a>
+    <a href="audit_logs.html" class="admin-nav-link">
+      <i class="bi bi-shield-check"></i>
+      <span>Audit Trail</span>
+    </a>
+
+    <div class="mt-auto p-3 border-top border-secondary border-opacity-25">
+      <a href="../index.html" class="admin-nav-link text-white-50">
+        <i class="bi bi-box-arrow-up-right"></i>
+        <span>View Public Site</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main Wrapper -->
+  <div class="admin-main-wrapper">
+    <!-- Topbar -->
+    <header class="admin-topbar">
+      <div class="d-flex align-items-center gap-3">
+        <h4 class="admin-page-title">Downloadable Resources & PDFs</h4>
+      </div>
+
+      <div class="d-flex align-items-center gap-3">
+        <div class="admin-user-pill">
+          <i class="bi bi-person-circle text-success"></i>
+          <span class="admin-user-name">GreenGrow Project Administrator</span>
+          <span class="badge bg-secondary text-uppercase admin-user-role" style="font-size: 0.65rem;">superadmin</span>
+        </div>
+        <button class="btn btn-sm btn-outline-danger rounded-pill px-3 admin-logout-btn">
+          <i class="bi bi-box-arrow-right me-1"></i>Logout
+        </button>
+      </div>
+    </header>
+
+    <!-- Admin Page Content -->
+    <main class="admin-content">
+      <div class="row g-4">
+        <!-- Upload Resource Form -->
+        <div class="col-lg-4">
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <h5><i class="bi bi-cloud-arrow-up text-success me-2"></i>Add Resource Guide</h5>
+            </div>
+            <div class="admin-card-body">
+              <div id="uploadNotice"></div>
+              <form id="uploadResourceForm">
+                <div class="mb-3">
+                  <label class="form-label small fw-bold">Resource Title <span class="text-danger">*</span></label>
+                  <input type="text" class="form-control" id="resTitle" required placeholder="e.g. Organic Manure Guide">
+                </div>
+                <div class="mb-3">
+                  <label class="form-label small fw-bold">Category</label>
+                  <input type="text" class="form-control" id="resCategory" list="catList" placeholder="Guides" value="Guides">
+                  <datalist id="catList">
+                    <option value="Guides">
+                    <option value="Government Schemes">
+                    <option value="Research Papers">
+                    <option value="Handbooks">
+                  </datalist>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label small fw-bold">Description</label>
+                  <textarea class="form-control" id="resDesc" rows="3" placeholder="Brief description of the document..."></textarea>
+                </div>
+                <div class="mb-4">
+                  <label class="form-label small fw-bold">Select File (PDF, DOCX, XLSX)</label>
+                  <input type="file" class="form-control" id="resFile" accept=".pdf,.doc,.docx,.xlsx,.txt">
+                  <small class="text-muted">In frontend demo, file metadata is saved locally.</small>
+                </div>
+                <button type="submit" class="btn btn-primary-green w-100 rounded-pill fw-bold" id="uploadBtn">
+                  <i class="bi bi-upload me-1"></i>Save Resource
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- Resources Table -->
+        <div class="col-lg-8">
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <h5><i class="bi bi-folder2 text-primary me-2"></i>Existing Files (<span id="resCountLabel">0</span>)</h5>
+            </div>
+            <div class="table-responsive">
+              <table class="table admin-table mb-0">
+                <thead>
+                  <tr>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Size</th>
+                    <th>Downloads</th>
+                    <th>Date</th>
+                    <th class="text-end">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="resourcesTableBody">
+                  <!-- Populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Bootstrap 5 Bundle JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Data Store JS -->
+  <script src="../js/data.js"></script>
+  <!-- Admin Custom JS -->
+  <script src="../js/admin.js"></script>
+  <script>
+    function renderResourcesTable() {
+      const resources = DataStore.getResources();
+      document.getElementById("resCountLabel").textContent = resources.length;
+      const tbody = document.getElementById("resourcesTableBody");
+
+      if (resources.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted py-5">No resources found. Add a document using the form.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = resources.map(r => `
+        <tr>
+          <td>
+            <strong>${r.title}</strong><br>
+            <small class="text-muted">${r.file_name}</small>
+          </td>
+          <td><span class="badge bg-light text-dark border">${r.category}</span></td>
+          <td><small>${(r.file_size_bytes / 1024).toFixed(1)} KB</small></td>
+          <td><span class="badge bg-secondary-subtle text-secondary">${r.download_count || 0}</span></td>
+          <td><small class="text-muted">${r.created_at}</small></td>
+          <td class="text-end text-nowrap">
+            <a href="../${r.file_path}" download class="btn btn-sm btn-outline-success py-0 px-2 rounded-pill me-1" title="Download">
+              <i class="bi bi-download"></i>
+            </a>
+            <button class="btn btn-sm btn-outline-danger py-0 px-2 rounded-pill" onclick="deleteResource(${r.id}, '${r.title.replace(/'/g, "\\'")}')" title="Delete">
+              <i class="bi bi-trash"></i>
+            </button>
+          </td>
+        </tr>
+      `).join("");
+    }
+
+    function deleteResource(id, title) {
+      if (!confirm(`Are you sure you want to remove resource '${title}'?`)) return;
+      const resources = DataStore.getResources().filter(r => r.id !== id);
+      DataStore.saveResources(resources);
+      DataStore.logAudit("DELETE", "RESOURCE", id, `Removed resource '${title}'`);
+      renderResourcesTable();
+    }
+
+    document.getElementById("uploadResourceForm")?.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const fileInput = document.getElementById("resFile");
+      const title = document.getElementById("resTitle").value.trim();
+      const category = document.getElementById("resCategory").value.trim() || "Guides";
+      const desc = document.getElementById("resDesc").value.trim();
+
+      const fileName = fileInput.files.length > 0 ? fileInput.files[0].name : "greengrow_farmer_guidance_handbook.pdf";
+      const fileSize = fileInput.files.length > 0 ? fileInput.files[0].size : 12288;
+
+      const newRes = {
+        id: Date.now(),
+        title: title,
+        category: category,
+        description: desc,
+        file_name: fileName,
+        file_path: "uploads/resources/greengrow_farmer_guidance_handbook.pdf",
+        file_size_bytes: fileSize,
+        file_type: fileName.split('.').pop() || "pdf",
+        download_count: 0,
+        created_at: new Date().toISOString().slice(0, 10),
+        is_published: true
+      };
+
+      const resources = DataStore.getResources();
+      resources.unshift(newRes);
+      DataStore.saveResources(resources);
+      DataStore.logAudit("UPLOAD", "RESOURCE", newRes.id, `Uploaded '${title}'`);
+
+      document.getElementById("uploadResourceForm").reset();
+      renderResourcesTable();
+    });
+
+    document.addEventListener("DOMContentLoaded", renderResourcesTable);
+  </script>
+</body>
+</html>
